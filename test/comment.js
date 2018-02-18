@@ -2,6 +2,7 @@ process.env.NODE_ENV = 'test';
 
 let mongoose = require("mongoose");
 let Comment = require('../app/model/comment');
+let Post = require('../app/model/post');
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -32,8 +33,25 @@ describe('/GET comment', () => {
 
 describe('/POST comment', () => {
   it('it should not POST a comment without owner', (done) => {
+    let comment = {
+        comment: 'A simple comment'
+    }
+    chai.request(server)
+        .post('/comment/setComment')
+        .send(comment)
+        .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('errors');
+            res.body.errors.should.have.property('owner');
+            res.body.errors.owner.should.have.property('kind').eql('required');
+          done();
+        });
+    });
+
+    it('it should not POST a comment without a text', (done) => {
       let comment = {
-          comment: 'A simple comment'
+          owner: 'James Lake'
       }
       chai.request(server)
           .post('/comment/setComment')
@@ -42,33 +60,19 @@ describe('/POST comment', () => {
               res.should.have.status(200);
               res.body.should.be.a('object');
               res.body.should.have.property('errors');
-              res.body.errors.should.have.property('owner');
-              res.body.errors.owner.should.have.property('kind').eql('required');
+              res.body.errors.should.have.property('comment');
+              res.body.errors.comment.should.have.property('kind').eql('required');
             done();
           });
-    });
-
-    it('it should not POST a comment without a text', (done) => {
-        let comment = {
-            owner: 'James Lake'
-        }
-        chai.request(server)
-            .post('/comment/setComment')
-            .send(comment)
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('errors');
-                res.body.errors.should.have.property('comment');
-                res.body.errors.comment.should.have.property('kind').eql('required');
-              done();
-            });
       });
 
       it('it should POST a comment successfully', (done) => {
+        let post = new Post( { owner: 'James Lake', content: 'A simple post', category: 'Some Category' } )
+        post.save((err, post) => {
           let comment = {
               owner: 'James Lake',
-              comment: 'A simple comment'
+              comment: 'A simple comment',
+              post: post.id
           }
           chai.request(server)
               .post('/comment/setComment')
@@ -81,4 +85,5 @@ describe('/POST comment', () => {
                 done();
               });
         });
+      });
 });
