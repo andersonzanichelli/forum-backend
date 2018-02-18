@@ -1,4 +1,4 @@
-let mongoose = require('morgoose');
+let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let CommentSchema = new Schema(
