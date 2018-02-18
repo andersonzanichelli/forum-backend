@@ -3,8 +3,8 @@ let Schema = mongoose.Schema;
 
 let CategorySchema = new Schema(
   {
-    title: { type: String, require: true },
-    description: { type: String, require: true }
+    title: { type: String, required: true },
+    description: { type: String, required: true }
   },
   {
     versionKey: false

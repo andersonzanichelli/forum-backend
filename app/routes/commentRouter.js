@@ -4,8 +4,10 @@ let Comment = require('../model/comment');
 function getAllComments(req, res) {
   let query = Comment.find({ post: req.params.post_id});
   query.exec((err, comments) => {
-    if(err)
+    if(err) {
       res.send(err);
+      return;
+    }
 
     res.json(comments);
   });
@@ -14,8 +16,10 @@ function getAllComments(req, res) {
 function setComment(req, res) {
   var newComment = new Comment(req.body);
   newComment.save((err, comment) => {
-    if(err)
+    if(err) {
       res.send(err);
+      return;
+    }
 
     res.json({ message: 'Comment successfully added', comment });
   });
@@ -23,12 +27,16 @@ function setComment(req, res) {
 
 function updateComment(req, res) {
     Comment.findById({_id: req.params.id}, (err, comment) => {
-        if(err)
+        if(err) {
           res.send(err);
+          return;
+        }
 
         Object.assign(comment, req.body).save((err, comment) => {
-            if(err)
+            if(err){
               res.send(err);
+              return;
+            }
 
             res.json({ message: 'Comment updated!', comment });
         });

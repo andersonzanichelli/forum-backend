@@ -4,8 +4,10 @@ let Post = require('../model/post');
 function getAllPosts(req, res) {
   let query = Post.find({});
   query.exec((err, posts) => {
-    if(err)
+    if(err) {
       res.send(err);
+      return;
+    }
 
     res.json(posts);
   });
@@ -13,8 +15,10 @@ function getAllPosts(req, res) {
 
 function getPost(req, res) {
   Post.findById(req.params.id, (err, post) => {
-    if(err)
+    if(err) {
       res.send(err);
+      return;
+    }
 
     res.json(post);
   });
@@ -23,8 +27,10 @@ function getPost(req, res) {
 function setPost(req, res) {
   var newPost = new Post(req.body);
   newPost.save((err, post) => {
-    if(err)
+    if(err) {
       res.send(err);
+      return;
+    }
 
     res.json({ message: 'Post successfully added', post });
   });
@@ -32,12 +38,16 @@ function setPost(req, res) {
 
 function updatePost(req, res) {
     Post.findById({_id: req.params.id}, (err, post) => {
-        if(err)
+        if(err) {
           res.send(err);
+          return;
+        }
 
         Object.assign(post, req.body).save((err, post) => {
-            if(err)
+            if(err) {
               res.send(err);
+              return;
+            }
 
             res.json({ message: 'Post updated!', post });
         });
