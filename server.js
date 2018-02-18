@@ -11,8 +11,9 @@ let options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 20000
 
 let categories = require('./app/routes/categoryRouter');
 let post = require('./app/routes/postRouter');
+let comment = require('./app/routes/commentRouter');
 
-mongoose.connect(config.database, options);
+mongoose.connect(config.DBHost, options);
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'error to connect to the database:'));
 
@@ -35,10 +36,11 @@ server.route("/post/:id")
 server.route("/category")
       .get(categories.getCategories)
       .post(categories.setCategory);
-      
+
 server.route("/comment/:id")
-      .post(forum.postComment)
-      .put(forum.updateComment);
+      .get(comment.getAllComments)
+      .post(comment.setComment)
+      .put(comment.updateComment);
 
 server.listen(port);
 console.log("Ready on port " + port);

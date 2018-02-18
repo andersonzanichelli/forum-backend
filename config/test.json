@@ -1,0 +1,3 @@
+{
+    "DBHost": "mongodb://forum-test:forum-test@ds239988.mlab.com:39988/forum-test"
+}

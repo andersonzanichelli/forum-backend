@@ -5,7 +5,8 @@ let CommentSchema = new Schema(
   {
     owner: { type: String, require: true },
     createdAt: { type: Date, default: Date.now },
-    comment: { type: String, require: true }
+    comment: { type: String, require: true },
+    post: { type: Schema.Types.ObjectId, ref: 'Post' }
   },
   {
     versionKey: false
@@ -19,5 +20,7 @@ CommentSchema.pre('save', next => {
 
   next();
 });
+
+let Post = mongoose.model('Post', PostSchema);
 
 module.exports = mongoose.model('comment', CommentSchema);
