@@ -1,14 +1,31 @@
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 let CategorySchema = new Schema(
   {
     title: { type: String, required: true },
-    description: { type: String, required: true }
-  },
-  {
-    versionKey: false
+    posts: [{
+      title: { type: String, required: true },
+      postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      createdAt: { type: Date, default: Date.now },
+      content: { type: String, required: true },
+      comments: [{
+        text: { type: String, required: true },
+        postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        createdAt: { type: Date, default: Date.now }
+      }]
+    }]
   }
 );
 
-module.exports = mongoose.model('category', CategorySchema);
+CategorySchema.pre('save', next => {
+  now = new Date();
+  if(!this.createdAt)
+    this.createdAt = now;
+
+  next();
+});
+
+const ModelClass = mongoose.model('category', CategorySchema)
+
+module.exports = ModelClass;

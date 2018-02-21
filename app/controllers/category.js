@@ -1,8 +1,8 @@
-let mongoose = require('mongoose');
-let Category = require('../model/category');
+const mongoose = require('mongoose');
+const Category = require('../model/category');
 
-function getCategories(req, res) {
-  let query = Category.find( {}, { title: 1, description: 1 });
+function getCategories(req, res, next) {
+  let query = Category.find( {}, { title: 1, posts: 1 });
   query.exec((err, categories) => {
     if(err) {
       res.send(err);
@@ -13,7 +13,7 @@ function getCategories(req, res) {
   });
 }
 
-function setCategory(req, res) {
+function setCategory(req, res, next) {
   var newCategory = new Category(req.body);
   newCategory.save((err, category) => {
     if(err) {

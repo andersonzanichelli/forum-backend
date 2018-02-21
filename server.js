@@ -4,14 +4,11 @@ let mongoose = require('mongoose');
 let morgan = require('morgan');
 let bodyParser = require('body-parser');
 let config = require('config');
-let port = 9000;
+let port = process.env.PORT || 9000;
 let options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 20000 }},
                 replset:{ socketOptions: { keepAlive: 1, connectTimeoutMS: 20000 }}
               };
-
-let categories = require('./app/routes/categoryRouter');
-let post = require('./app/routes/postRouter');
-let comment = require('./app/routes/commentRouter');
+let router = require('./router');
 
 mongoose.connect(config.DBHost, options);
 let db = mongoose.connection;
@@ -26,21 +23,7 @@ server.use(bodyParser.urlencoded({extended: true}));
 server.use(bodyParser.text());
 server.use(bodyParser.json({ type: 'application/json'}));
 
-server.get("/", post.getAllPosts);
-
-server.route("/post/:id")
-      .get(post.getPost)
-      .post(post.setPost)
-      .put(post.updatePost);
-
-server.route("/category")
-      .get(categories.getCategories)
-      .post(categories.setCategory);
-
-server.route("/comment/:id")
-      .get(comment.getAllComments)
-      .post(comment.setComment)
-      .put(comment.updateComment);
+router(server);
 
 server.listen(port);
 console.log("Ready on port " + port);
