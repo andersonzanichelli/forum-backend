@@ -46,8 +46,11 @@ exports.signin = function(req, res, next) {
     if (!existing)
       return res.status(442).send({ error: 'Please, verify the username and/or password'});
 
-    compare(password, existing.password, () => {
-      res.json({ token: tokenForUser(existing) });
+    compare(password, existing.password, (match) => {
+      if (match)
+        res.json({ token: tokenForUser(existing) });
+      else
+        return res.status(442).send({ error: 'Please, verify the username and/or password'});
     });
   });
 }
@@ -72,8 +75,7 @@ function encrypt(text, next) {
 }
 
 function compare(text, hash, next) {
-  bcrypt.compare(text, hash, (err, res) => {
-    if(res === true)
-      next();
+  bcrypt.compare(text, hash, (err, match) => {
+    next(match);
   });
 }

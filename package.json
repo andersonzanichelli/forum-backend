@@ -6,14 +6,16 @@
   "author": "Anderson Zanichelli",
   "license": "MIT",
   "dependencies": {
-    "bcrypt-node": "^0.1.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.2",
     "config": "^1.29.4",
     "express": "^4.16.2",
     "jwt-simple": "^0.5.1",
     "mongoose": "^5.0.6",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.1",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
